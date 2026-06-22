@@ -1,0 +1,398 @@
+// ==========================================
+// FeedBox – Common Reusable Styles
+// ==========================================
+
+// ---- Variables ----
+$primary        : #4F46E5;
+$primary-hover  : #4338CA;
+$accent         : #10B981;
+$warning        : #F59E0B;
+$surface        : #ffffff;
+$bg-light       : #F9FAFB;
+$text-main      : #111827;
+$text-muted     : #6B7280;
+$border-color   : #E5E7EB;
+
+// ---- Base ----
+* { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; box-sizing: border-box; }
+a { text-decoration: none; }
+
+// ---- Navbar ----
+.fb-navbar {
+  background : $surface;
+  border-bottom: 1px solid $border-color;
+  padding    : 0.875rem 0;
+
+  .fb-brand {
+    font-size  : 1.375rem;
+    font-weight: 700;
+    color      : $primary;
+    span { color: $text-main; }
+  }
+
+  .fb-nav-link {
+    color      : $text-muted;
+    font-size  : 0.875rem;
+    font-weight: 500;
+    padding    : 0.375rem 0.75rem;
+    border-radius: 6px;
+    transition : color 0.2s, background 0.2s;
+
+    &:hover, &.active {
+      color      : $primary;
+      background : rgba($primary, 0.07);
+    }
+  }
+}
+
+// ---- Buttons ----
+.fb-btn {
+  display        : inline-flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : 0.375rem;
+  padding        : 0.5rem 1.125rem;
+  font-size      : 0.875rem;
+  font-weight    : 600;
+  border-radius  : 8px;
+  border         : 2px solid transparent;
+  cursor         : pointer;
+  transition     : all 0.2s ease;
+  text-decoration: none;
+
+  &.fb-btn-primary {
+    background  : $primary;
+    color       : #fff;
+    border-color: $primary;
+    &:hover { background: $primary-hover; border-color: $primary-hover; color: #fff; }
+  }
+
+  &.fb-btn-outline {
+    background  : transparent;
+    color       : $primary;
+    border-color: $primary;
+    &:hover { background: $primary; color: #fff; }
+  }
+
+  &.fb-btn-ghost {
+    background  : transparent;
+    color       : $text-muted;
+    border-color: $border-color;
+    &:hover { background: $bg-light; color: $text-main; }
+  }
+
+  &.fb-btn-sm { padding: 0.35rem 0.875rem; font-size: 0.8rem; }
+  &.fb-btn-lg { padding: 0.75rem 1.75rem;  font-size: 1rem;   }
+}
+
+// ---- Card ----
+.fb-card {
+  background   : $surface;
+  border       : 1px solid $border-color;
+  border-radius: 14px;
+  padding      : 1.5rem;
+  transition   : box-shadow 0.2s, transform 0.2s;
+  height       : 100%;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform : translateY(-2px);
+  }
+
+  .fb-card-title {
+    font-size  : 1.05rem;
+    font-weight: 700;
+    color      : $text-main;
+    margin-bottom: 0.375rem;
+  }
+
+  .fb-card-desc {
+    font-size  : 0.875rem;
+    color      : $text-muted;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    flex-grow  : 1;
+  }
+
+  .fb-card-meta {
+    font-size  : 0.78rem;
+    color      : $text-muted;
+    display    : flex;
+    align-items: center;
+    gap        : 0.375rem;
+  }
+
+  .fb-card-footer {
+    margin-top : 1.25rem;
+    padding-top: 1.125rem;
+    border-top : 1px solid $border-color;
+    display    : flex;
+    align-items: center;
+    justify-content: space-between;
+    gap        : 0.5rem;
+    flex-wrap  : wrap;
+  }
+}
+
+// ---- Hero ----
+.fb-hero {
+  background   : linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%);
+  padding      : 4rem 0 3.5rem;
+  border-bottom: 1px solid $border-color;
+
+  .fb-hero-title {
+    font-size  : 2.25rem;
+    font-weight: 800;
+    color      : $text-main;
+    letter-spacing: -0.75px;
+    line-height: 1.2;
+    margin-bottom: 0.875rem;
+    span { color: $primary; }
+  }
+
+  .fb-hero-subtitle {
+    font-size  : 1.05rem;
+    color      : $text-muted;
+    max-width  : 500px;
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+  }
+}
+
+// ---- Section ----
+.fb-section {
+  padding: 2.5rem 0;
+
+  .fb-section-title {
+    font-size  : 1.2rem;
+    font-weight: 700;
+    color      : $text-main;
+    margin-bottom: 0.25rem;
+  }
+
+  .fb-section-subtitle {
+    font-size    : 0.875rem;
+    color        : $text-muted;
+    margin-bottom: 1.75rem;
+  }
+}
+
+// ---- Badge ----
+.fb-badge {
+  display    : inline-flex;
+  align-items: center;
+  gap        : 0.25rem;
+  padding    : 0.2rem 0.625rem;
+  font-size  : 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+
+  &.fb-badge-primary { background: rgba($primary, 0.1); color: $primary; }
+  &.fb-badge-success { background: rgba($accent,  0.1); color: darken($accent,  12%); }
+  &.fb-badge-warning { background: rgba($warning, 0.12); color: darken($warning, 20%); }
+  &.fb-badge-gray    { background: #F3F4F6; color: $text-muted; }
+}
+
+// ---- Stars ----
+.fb-stars {
+  display: inline-flex;
+  gap    : 3px;
+
+  .fb-star {
+    font-size : 1.15rem;
+    color     : #D1D5DB;
+    cursor    : pointer;
+    transition: color 0.15s;
+    &.filled  { color: $warning; }
+  }
+}
+
+// ---- Feedback Card ----
+.fb-feedback-card {
+  background   : $surface;
+  border       : 1px solid $border-color;
+  border-radius: 12px;
+  padding      : 1.25rem;
+
+  .fb-feedback-header {
+    display        : flex;
+    align-items    : center;
+    justify-content: space-between;
+    margin-bottom  : 0.625rem;
+    flex-wrap      : wrap;
+    gap            : 0.5rem;
+  }
+
+  .fb-feedback-user {
+    display    : flex;
+    align-items: center;
+    gap        : 0.625rem;
+  }
+
+  .fb-avatar {
+    width        : 36px;
+    height       : 36px;
+    border-radius: 50%;
+    background   : linear-gradient(135deg, $primary 0%, $accent 100%);
+    display      : flex;
+    align-items  : center;
+    justify-content: center;
+    color        : #fff;
+    font-size    : 0.8rem;
+    font-weight  : 700;
+    flex-shrink  : 0;
+  }
+
+  .fb-feedback-name {
+    font-size  : 0.875rem;
+    font-weight: 600;
+    color      : $text-main;
+  }
+
+  .fb-feedback-date {
+    font-size: 0.75rem;
+    color    : $text-muted;
+  }
+
+  .fb-feedback-msg {
+    font-size  : 0.875rem;
+    color      : #374151;
+    line-height: 1.6;
+    margin-top : 0.5rem;
+  }
+}
+
+// ---- Form ----
+.fb-form-group {
+  margin-bottom: 1.25rem;
+
+  label {
+    font-size  : 0.85rem;
+    font-weight: 600;
+    color      : $text-main;
+    margin-bottom: 0.4rem;
+    display    : block;
+  }
+
+  .fb-input, .fb-textarea {
+    width      : 100%;
+    padding    : 0.625rem 0.875rem;
+    border     : 1.5px solid $border-color;
+    border-radius: 8px;
+    font-size  : 0.875rem;
+    color      : $text-main;
+    background : $surface;
+    outline    : none;
+    transition : border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder { color: #9CA3AF; }
+    &:focus {
+      border-color: $primary;
+      box-shadow  : 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  .fb-textarea { resize: vertical; min-height: 110px; }
+}
+
+// ---- Stat Card ----
+.fb-stat-card {
+  background   : $surface;
+  border       : 1px solid $border-color;
+  border-radius: 14px;
+  padding      : 1.5rem;
+
+  .fb-stat-icon {
+    width        : 44px;
+    height       : 44px;
+    border-radius: 10px;
+    display      : flex;
+    align-items  : center;
+    justify-content: center;
+    font-size    : 1.25rem;
+    margin-bottom: 1rem;
+
+    &.icon-primary { background: rgba($primary, 0.1); }
+    &.icon-success { background: rgba($accent,  0.1); }
+    &.icon-warning { background: rgba($warning, 0.12); }
+  }
+
+  .fb-stat-value {
+    font-size  : 2rem;
+    font-weight: 800;
+    color      : $text-main;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .fb-stat-label {
+    font-size  : 0.8rem;
+    color      : $text-muted;
+    font-weight: 500;
+  }
+}
+
+// ---- Page Header ----
+.fb-page-header {
+  background   : $surface;
+  border-bottom: 1px solid $border-color;
+  padding      : 1.75rem 0;
+
+  .fb-page-title    { font-size: 1.375rem; font-weight: 700; color: $text-main; margin: 0; }
+  .fb-page-subtitle { font-size: 0.875rem; color: $text-muted; margin: 0.25rem 0 0; }
+}
+
+// ---- Table ----
+.fb-table {
+  width          : 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size     : 0.75rem;
+    font-weight   : 600;
+    color         : $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding       : 0.75rem 1rem;
+    border-bottom : 1px solid $border-color;
+    text-align    : left;
+    background    : $bg-light;
+    white-space   : nowrap;
+  }
+
+  td {
+    padding      : 0.875rem 1rem;
+    border-bottom: 1px solid $border-color;
+    font-size    : 0.875rem;
+    color        : $text-main;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td      { background: $bg-light; }
+}
+
+// ---- Empty State ----
+.fb-empty {
+  text-align: center;
+  padding   : 3rem 1rem;
+
+  .fb-empty-icon  { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+  .fb-empty-title { font-size: 1rem; font-weight: 600; color: $text-main; margin-bottom: 0.25rem; }
+  .fb-empty-desc  { font-size: 0.875rem; color: $text-muted; }
+}
+
+// ---- Utilities ----
+.fb-divider { border: none; border-top: 1px solid $border-color; margin: 1.5rem 0; }
+.bg-light-fb { background: $bg-light; }
+.text-primary-fb { color: $primary; }
+.fb-table-wrapper { border: 1px solid $border-color; border-radius: 14px; overflow: hidden; overflow-x: auto; }
+
+// ---- Footer ----
+.fb-footer {
+  background   : $surface;
+  border-top   : 1px solid $border-color;
+  padding      : 1.125rem 0;
+  font-size    : 0.8rem;
+  color        : $text-muted;
+}

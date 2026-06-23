@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getInitials } from "@/utils/helper";
 import { StarDisplay } from "@/utils/feedbackUtils";
 import { Select } from "antd";
+import AppPagination from "@/app/components/AppPagination/AppPagination";
 import { getAllFeedbacks } from "@/models/feedbackModel";
 import { getProjects } from "@/models/projectModel";
 import type { Feedback } from "@/services/feedbackService";
@@ -33,6 +34,8 @@ export default function DashboardPage() {
   const [loading,         setLoading]         = useState(true);
   const [projectFilter,   setProjectFilter]   = useState("");
   const [ratingFilter,    setRatingFilter]    = useState("");
+  const [page,            setPage]            = useState(1);
+  const PAGE_SIZE = 8;
 
   useEffect(() => {
     Promise.all([getAllFeedbacks(), getProjects()])
@@ -47,6 +50,8 @@ export default function DashboardPage() {
     const matchRating  = !ratingFilter  || fb.rating === Number(ratingFilter);
     return matchProject && matchRating;
   });
+
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const stats = [
     { icon: "📁", label: "Total Projects",  value: loading ? "—" : String(projects.length),  iconClass: "icon-primary" },
@@ -92,7 +97,7 @@ export default function DashboardPage() {
               <Select
                 style={{ width: 160 }}
                 value={projectFilter}
-                onChange={(val) => setProjectFilter(val)}
+                onChange={(val) => { setProjectFilter(val); setPage(1); }}
                 options={[
                   { value: "", label: "All Projects" },
                   ...projects.map((p) => ({ value: p.key, label: p.name })),
@@ -101,7 +106,7 @@ export default function DashboardPage() {
               <Select
                 style={{ width: 140 }}
                 value={ratingFilter}
-                onChange={(val) => setRatingFilter(val)}
+                onChange={(val) => { setRatingFilter(val); setPage(1); }}
                 options={[
                   { value: "", label: "All Ratings" },
                   ...[5, 4, 3, 2, 1].map((r) => ({ value: String(r), label: `${r} Star${r !== 1 ? "s" : ""}` })),
@@ -141,7 +146,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((fb) => (
+                    {paginated.map((fb) => (
                       <tr key={fb.feedbackId}>
                         <td>
                           <div className="d-flex align-items-center gap-2">
@@ -170,11 +175,14 @@ export default function DashboardPage() {
                     ))}
                   </tbody>
                 </table>
+                <AppPagination total={filtered.length} page={page} pageSize={PAGE_SIZE} onChange={setPage} />
               </div>
+
+              
 
               {/* Mobile Cards */}
               <div className="d-flex flex-column gap-3 d-md-none">
-                {filtered.map((fb) => (
+                {paginated.map((fb) => (
                   <div key={fb.feedbackId} className="fb-feedback-card">
                     <div className="fb-feedback-header">
                       <div className="fb-feedback-user">
@@ -190,7 +198,10 @@ export default function DashboardPage() {
                     <p className="fb-feedback-msg">{fb.message}</p>
                   </div>
                 ))}
+                <AppPagination total={filtered.length} page={page} pageSize={PAGE_SIZE} onChange={setPage} />
               </div>
+
+            
             </>
           )}
 

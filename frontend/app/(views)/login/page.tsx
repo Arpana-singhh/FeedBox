@@ -9,6 +9,7 @@ import { Input, Checkbox, Button } from "antd";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import AuthService from "@/services/authService";
+import { setAuthCookie } from "@/utils/authCookies";
 import toast from "react-hot-toast";
 
 // ── Yup validation schema ─────────────────────────────────────────────────────
@@ -33,6 +34,8 @@ export default function LoginPage() {
       const provider      = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
       const token          = await userCredential.user.getIdToken();
+
+      setAuthCookie(token); // save to cookie for middleware route protection
 
       const res = await AuthService.getUser(token);
       console.log("Google login user:", res.data);
@@ -68,6 +71,8 @@ export default function LoginPage() {
 
       // Step 3 — Get the Firebase ID token
       const token = await userCredential.user.getIdToken();
+
+      setAuthCookie(token); // save to cookie for middleware route protection
 
       // Step 4 — Verify token with backend and get user info
       const res = await AuthService.getUser(token);

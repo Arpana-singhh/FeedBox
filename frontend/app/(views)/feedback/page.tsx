@@ -1,6 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { Input, Button } from "antd";
+
+// ── Validation schema ─────────────────────────────────────────────────────────
+const feedbackSchema = Yup.object({
+  userName: Yup.string().min(2, "Name must be at least 2 characters").required("Name is required"),
+  message : Yup.string().min(10, "Feedback must be at least 10 characters").required("Feedback is required"),
+});
 
 // Static data – recent feedbacks for this project
 const RECENT_FEEDBACKS = [
@@ -62,19 +71,29 @@ function getInitials(name: string) {
 }
 
 export default function FeedbackPage() {
-  const [rating,   setRating]   = useState(0);
-  const [userName, setUserName] = useState("");
-  const [message,  setMessage]  = useState("");
+  const [rating,    setRating]    = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [ratingError, setRatingError] = useState(false);
 
   // Static project info – will come from Firestore later
   const project = { name: "Designify UI Kit", id: "proj-001" };
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const handleSubmit = (
+    _values: { userName: string; message: string },
+    { setSubmitting, resetForm }: { setSubmitting: (v: boolean) => void; resetForm: () => void }
+  ) => {
+    if (rating === 0) {
+      setRatingError(true);
+      setSubmitting(false);
+      return;
+    }
     // Firebase write will go here
     setSubmitted(true);
-  }
+    resetForm();
+    setRating(0);
+    setRatingError(false);
+    setSubmitting(false);
+  };
 
   return (
     <>
@@ -110,72 +129,96 @@ export default function FeedbackPage() {
                     <div className="fb-empty-icon">🎉</div>
                     <div className="fb-empty-title">Thank you for your feedback!</div>
                     <div className="fb-empty-desc mb-3">Your response has been recorded.</div>
-                    <button
-                      className="fb-btn fb-btn-outline"
-                      onClick={() => { setSubmitted(false); setRating(0); setUserName(""); setMessage(""); }}
-                    >
+                    <Button onClick={() => setSubmitted(false)}>
                       Submit Another
-                    </button>
+                    </Button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit}>
+                  <Formik
+                    initialValues={{ userName: "", message: "" }}
+                    validationSchema={feedbackSchema}
+                    onSubmit={handleSubmit}
+                  >
+                    {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
+                      <Form>
 
-                    {/* Name */}
-                    <div className="fb-form-group">
-                      <label htmlFor="userName">Your Name</label>
-                      <input
-                        id="userName"
-                        type="text"
-                        className="fb-input"
-                        placeholder="e.g. Rahul Mehta"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
-                        required
-                      />
-                    </div>
+                        {/* Name */}
+                        <div className="fb-form-group">
+                          <label htmlFor="userName">Your Name</label>
+                          <Input
+                            id="userName"
+                            name="userName"
+                            size="large"
+                            placeholder="e.g. Rahul Mehta"
+                            value={values.userName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            status={touched.userName && errors.userName ? "error" : ""}
+                          />
+                          {touched.userName && errors.userName && (
+                            <small className="text-danger">{errors.userName}</small>
+                          )}
+                        </div>
 
-                    {/* Rating */}
-                    <div className="fb-form-group">
-                      <label>Rating</label>
-                      <div className="d-flex align-items-center gap-3">
-                        <StarPicker value={rating} onChange={setRating} />
-                        {rating > 0 && (
-                          <span className="fb-badge fb-badge-warning">{rating} / 5</span>
-                        )}
+                        {/* Rating */}
+                        <div className="fb-form-group">
+                          <label>Rating</label>
+                          <div className="d-flex align-items-center gap-3">
+                            <StarPicker
+                              value={rating}
+                              onChange={(n) => { setRating(n); setRatingError(false); }}
+                            />
+                            {rating > 0 && (
+                              <span className="fb-badge fb-badge-warning">{rating} / 5</span>
+                            )}
+                            {rating === 0 && (
+                              <span style={{ fontSize: "0.8rem", color: "#9CA3AF" }}>Click to rate</span>
+                            )}
+                          </div>
+                          {ratingError && (
+                            <small className="text-danger">Please select a rating</small>
+                          )}
+                        </div>
+
+                        {/* Message */}
+                        <div className="fb-form-group">
+                          <label htmlFor="message">Your Feedback</label>
+                          <Input.TextArea
+                            id="message"
+                            name="message"
+                            size="large"
+                            placeholder="What did you like or dislike? Any suggestions?"
+                            value={values.message}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            status={touched.message && errors.message ? "error" : ""}
+                            rows={4}
+                          />
+                          {touched.message && errors.message && (
+                            <small className="text-danger">{errors.message}</small>
+                          )}
+                        </div>
+
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          size="large"
+                          block
+                          loading={isSubmitting}
+                          disabled={rating === 0}
+                        >
+                          Submit Feedback
+                        </Button>
+
                         {rating === 0 && (
-                          <span style={{ fontSize: "0.8rem", color: "#9CA3AF" }}>Click to rate</span>
+                          <p style={{ fontSize: "0.78rem", color: "#9CA3AF", textAlign: "center", marginTop: "0.5rem" }}>
+                            Please select a rating to continue
+                          </p>
                         )}
-                      </div>
-                    </div>
 
-                    {/* Message */}
-                    <div className="fb-form-group">
-                      <label htmlFor="message">Your Feedback</label>
-                      <textarea
-                        id="message"
-                        className="fb-textarea"
-                        placeholder="What did you like or dislike? Any suggestions?"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="fb-btn fb-btn-primary w-100"
-                      disabled={rating === 0}
-                    >
-                      Submit Feedback
-                    </button>
-
-                    {rating === 0 && (
-                      <p style={{ fontSize: "0.78rem", color: "#9CA3AF", textAlign: "center", marginTop: "0.5rem" }}>
-                        Please select a rating to continue
-                      </p>
+                      </Form>
                     )}
-
-                  </form>
+                  </Formik>
                 )}
 
               </div>

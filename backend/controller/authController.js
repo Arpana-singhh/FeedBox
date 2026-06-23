@@ -32,9 +32,10 @@ const register = async (req, res) => {
 const getUser = async (req, res) => {
   // req.user is already set by authMiddleware (token already verified)
   res.status(200).json({
-    uid  : req.user.uid,
-    email: req.user.email,
-    name : req.user.name || null,
+    uid          : req.user.uid,
+    email        : req.user.email,
+    name         : req.user.name || null,
+    emailVerified: req.user.email_verified, // Firebase stores this as email_verified in the decoded token
   });
 };
 

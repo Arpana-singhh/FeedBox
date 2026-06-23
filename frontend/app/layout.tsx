@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/global.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 export const metadata: Metadata = {
   title: "FeedBox – Multi-Project Feedback",
@@ -17,11 +19,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
 
         {/* ── Page Content ── */}
-        <main className="flex-grow-1">
-          {children}
-        </main>
+        {/* AntdRegistry injects antd styles server-side — fixes the CSS flash on first load */}
+        <AntdRegistry>
+          <main className="flex-grow-1">
+            {children}
+          </main>
+        </AntdRegistry>
 
         <Footer />
+
+        {/* Global toast notifications — available on every page */}
+        <Toaster position="bottom-right" toastOptions={{ duration: 6000 }} />
 
       </body>
     </html>

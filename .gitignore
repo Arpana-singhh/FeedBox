@@ -47,3 +47,6 @@ coverage/
 # ── Miscellaneous ──────────────────────────────────────────────────────────────
 .vercel
 .turbo
+
+
+backend/config/serviceAccountKey.json

@@ -2,44 +2,44 @@ import type { ThemeConfig } from "antd";
 
 const theme: ThemeConfig = {
   token: {
-    colorPrimary      : "#4F46E5",
-    colorPrimaryHover : "#4338CA",
-    colorPrimaryActive: "#3730A3",
+    colorPrimary      : "#C3110C",
+    colorPrimaryHover : "#A50E09",
+    colorPrimaryActive: "#8B0B07",
     borderRadius      : 8,
     fontFamily        : "Inter, sans-serif",
   },
   components: {
     Button: {
-      colorPrimary      : "#4F46E5",
-      colorPrimaryHover : "#4338CA",
+      colorPrimary      : "#C3110C",
+      colorPrimaryHover : "#A50E09",
       borderRadius      : 8,
     },
     Input: {
-      colorPrimary      : "#4F46E5",
-      colorPrimaryHover : "#4338CA",
+      colorPrimary      : "#C3110C",
+      colorPrimaryHover : "#A50E09",
       borderRadius      : 8,
     },
     Select: {
-      colorPrimary      : "#4F46E5",
-      colorPrimaryHover : "#4338CA",
+      colorPrimary      : "#C3110C",
+      colorPrimaryHover : "#A50E09",
       optionSelectedBg  : "#EEF2FF",
       borderRadius      : 8,
     },
     Pagination: {
-      colorPrimary      : "#4F46E5",
-      colorPrimaryHover : "#4338CA",
+      colorPrimary      : "#C3110C",
+      colorPrimaryHover : "#A50E09",
       borderRadius      : 8,
     },
     Modal: {
-      colorPrimary      : "#4F46E5",
+      colorPrimary      : "#C3110C",
       borderRadius      : 8,
     },
     Collapse: {
-      colorPrimary      : "#4F46E5",
+      colorPrimary      : "#C3110C",
       borderRadius      : 8,
     },
     Badge: {
-      colorPrimary      : "#4F46E5",
+      colorPrimary      : "#C3110C",
     },
     Table: {
       borderColor       : "#e5e7eb",

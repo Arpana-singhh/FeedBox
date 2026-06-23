@@ -21,6 +21,7 @@ export type Project = {
   key        : string;
   description: string;
   type       : "public" | "private";
+  projectUrl ?: string;
   createdAt  : unknown;
 };
 
@@ -29,6 +30,7 @@ export type CreateProjectPayload = {
   key        : string;
   description: string;
   type       : "public" | "private";
+  projectUrl ?: string;
 };
 
 // Find a project by its URL key

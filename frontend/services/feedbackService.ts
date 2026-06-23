@@ -38,6 +38,13 @@ export async function insertFeedback(payload: CreateFeedbackPayload): Promise<st
   return docRef.id; // return the generated feedbackId
 }
 
+// Get all feedbacks across all projects ordered by newest first
+export async function findAllFeedbacks(): Promise<Feedback[]> {
+  const q    = query(collection(db, "feedbacks"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((doc) => ({ feedbackId: doc.id, ...doc.data() })) as Feedback[];
+}
+
 // Get all feedbacks for a project ordered by newest first
 export async function findFeedbacksByProjectKey(projectKey: string): Promise<Feedback[]> {
   const q    = query(

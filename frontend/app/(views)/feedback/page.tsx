@@ -120,10 +120,10 @@ export default function FeedbackPage() {
         <div className="fb-empty-desc mb-3">
           Ask the project owner for the key, then enter it below.
         </div>
-        <div className="d-flex gap-2" style={{ maxWidth: 360, width: "100%" }}>
+        <div className="key-input-field">
           <Input
             size="large"
-            placeholder="e.g. notify-app"
+            placeholder="e.g. feed-box"
             value={keyInput}
             onChange={(e) => setKeyInput(e.target.value)}
             onPressEnter={handleKeySubmit}

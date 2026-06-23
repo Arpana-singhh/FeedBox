@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { getProjects, removeProject } from "@/models/projectModel";
 import type { Project } from "@/services/projectService";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiCopy, FiCheck, FiExternalLink } from "react-icons/fi";
+import { Tooltip } from "antd";
 import ConfirmModal from "@/app/components/ConfirmModal/ConfirmModal";
 import FeedbackListModal from "@/app/components/FeedbackListModal/FeedbackListModal";
 import toast from "react-hot-toast";
@@ -14,12 +15,19 @@ export default function ProjectsPage() {
   const [deleteTarget,    setDeleteTarget]    = useState<Project | null>(null);
   const [deleteLoading,   setDeleteLoading]   = useState(false);
   const [feedbackTarget,  setFeedbackTarget]  = useState<Project | null>(null);
+  const [copiedKey,       setCopiedKey]       = useState("");
 
   useEffect(() => {
     getProjects()
       .then(setProjects)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleCopy = (key: string) => {
+    navigator.clipboard.writeText(key);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(""), 2000);
+  };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -101,6 +109,11 @@ export default function ProjectsPage() {
                         {project.type}
                       </span>
                       <div className="action-icons d-flex gap-2">
+                        {project.projectUrl && (
+                          <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="fb-icon-btn" title="View project">
+                            <FiExternalLink size={15} />
+                          </a>
+                        )}
                         <a href={`/edit-project?id=${project.projectId}`} className="fb-icon-btn" title="Edit project">
                           <FiEdit2 size={15} />
                         </a>
@@ -115,9 +128,28 @@ export default function ProjectsPage() {
                     </div>
 
                     <h3 className="fb-card-title">{project.name}</h3>
-                    <p className="fb-card-desc">
-                      {project.description || "No description provided."}
-                    </p>
+                    <Tooltip title={project.description} placement="top">
+                      <p className="fb-card-desc fb-card-desc-clamp">
+                        {project.description || "No description provided."}
+                      </p>
+                    </Tooltip>
+
+                    {project.type === "public" && (
+                      <div className="fb-project-key">
+                        <span className="fb-project-key-label">Key</span>
+                        <code className="fb-project-key-value">{project.key}</code>
+                        <button
+                          className="fb-icon-btn"
+                          style={{ width: 26, height: 26}}
+                          title="Copy key"
+                          onClick={() => handleCopy(project.key)}
+                        >
+                          {copiedKey === project.key
+                            ? <FiCheck size={14} style={{ color: "#10B981" }} />
+                            : <FiCopy size={14} />}
+                        </button>
+                      </div>
+                    )}
 
                     <div className="fb-card-footer">
                       <a

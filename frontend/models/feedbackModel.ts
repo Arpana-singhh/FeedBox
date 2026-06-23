@@ -3,6 +3,7 @@
 import {
   insertFeedback,
   findFeedbacksByProjectKey,
+  findAllFeedbacks,
   type Feedback,
   type CreateFeedbackPayload,
 } from "@/services/feedbackService";
@@ -50,4 +51,9 @@ export async function submitFeedback(input: SubmitFeedbackInput): Promise<{ succ
 // Get all feedbacks for a project
 export async function getProjectFeedbacks(projectKey: string): Promise<Feedback[]> {
   return findFeedbacksByProjectKey(projectKey);
+}
+
+// Get all feedbacks across all projects — used on dashboard
+export async function getAllFeedbacks(): Promise<Feedback[]> {
+  return findAllFeedbacks();
 }

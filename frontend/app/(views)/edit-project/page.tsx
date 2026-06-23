@@ -32,6 +32,7 @@ export default function EditProjectPage() {
         key        : project.key,
         description: project.description,
         type       : project.type,
+        projectUrl : project.projectUrl || "",
       });
     });
   }, [projectId, router]);
@@ -46,6 +47,7 @@ export default function EditProjectPage() {
         key        : values.key.trim(),
         description: values.description.trim(),
         type       : values.type,
+        projectUrl : values.projectUrl?.trim() || undefined,
       });
       toast.success("Project updated successfully!", { id: "project-toast" });
       router.push("/");

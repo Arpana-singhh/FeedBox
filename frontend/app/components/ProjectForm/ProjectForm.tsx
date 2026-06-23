@@ -10,6 +10,7 @@ export type ProjectFormValues = {
   key        : string;
   description: string;
   type       : "public" | "private";
+  projectUrl : string;
 };
 
 type Props = {
@@ -26,6 +27,7 @@ const projectSchema = Yup.object({
     .required("Project key is required"),
   description: Yup.string().min(10, "Description must be at least 10 characters").required("Description is required"),
   type       : Yup.string().oneOf(["public", "private"]).required("Type is required"),
+  projectUrl : Yup.string().url("Enter a valid URL (e.g. https://myapp.vercel.app)").nullable().optional(),
 });
 
 export default function ProjectForm({ initialValues, onSubmit, mode }: Props) {
@@ -126,6 +128,23 @@ export default function ProjectForm({ initialValues, onSubmit, mode }: Props) {
                 />
                 {touched.type && errors.type && (
                   <small className="text-danger">{errors.type}</small>
+                )}
+              </div>
+
+              <div className="fb-form-group">
+                <label htmlFor="projectUrl">Project URL <span style={{ color: "#9CA3AF", fontWeight: 400 }}>(optional)</span></label>
+                <Input
+                  id="projectUrl"
+                  name="projectUrl"
+                  size="large"
+                  placeholder="e.g. https://myapp.vercel.app"
+                  value={values.projectUrl}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  status={touched.projectUrl && errors.projectUrl ? "error" : ""}
+                />
+                {touched.projectUrl && errors.projectUrl && (
+                  <small className="text-danger">{errors.projectUrl}</small>
                 )}
               </div>
 

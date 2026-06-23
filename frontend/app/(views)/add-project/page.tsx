@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { insertProject } from "@/services/projectService";
 import ProjectForm, { type ProjectFormValues } from "@/app/components/ProjectForm/ProjectForm";
 
-const empty: ProjectFormValues = { name: "", key: "", description: "", type: "public" };
+const empty: ProjectFormValues = { name: "", key: "", description: "", type: "public", projectUrl: "" };
 
 export default function AddProjectPage() {
   const router = useRouter();
@@ -20,6 +20,7 @@ export default function AddProjectPage() {
         key        : values.key.trim(),
         description: values.description.trim(),
         type       : values.type,
+        projectUrl : values.projectUrl?.trim() || undefined,
       });
       toast.success("Project created successfully!", { id: "project-toast" });
       router.push("/");

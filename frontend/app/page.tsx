@@ -80,9 +80,9 @@ export default function ProjectsPage() {
                         {project.type}
                       </span>
                       <div className="action-icons d-flex gap-2">
-                        <button className="fb-icon-btn" title="Edit project">
+                        <a href={`/edit-project?id=${project.projectId}`} className="fb-icon-btn" title="Edit project">
                           <FiEdit2 size={15} />
-                        </button>
+                        </a>
                         <button className="fb-icon-btn fb-icon-btn-danger" title="Delete project">
                           <FiTrash2 size={15} />
                         </button>

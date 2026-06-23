@@ -6,6 +6,9 @@ import {
   where,
   getDocs,
   addDoc,
+  doc,
+  getDoc,
+  updateDoc,
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
@@ -43,6 +46,18 @@ export async function findAllProjects(): Promise<Project[]> {
   const q    = query(collection(db, "projects"), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((doc) => ({ projectId: doc.id, ...doc.data() })) as Project[];
+}
+
+// Find a project by its Firestore document ID
+export async function findProjectById(projectId: string): Promise<Project | null> {
+  const snap = await getDoc(doc(db, "projects", projectId));
+  if (!snap.exists()) return null;
+  return { projectId: snap.id, ...snap.data() } as Project;
+}
+
+// Update an existing project document
+export async function updateProject(projectId: string, payload: CreateProjectPayload): Promise<void> {
+  await updateDoc(doc(db, "projects", projectId), { ...payload });
 }
 
 // Insert a new project document into Firestore

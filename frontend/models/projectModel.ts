@@ -1,6 +1,6 @@
 // Business logic for projects — decisions, transformations, orchestration
 // Calls service functions, never touches Firestore directly
-import { findProjectByKey, findAllProjects, insertProject, type Project } from "@/services/projectService";
+import { findProjectByKey, findProjectById, findAllProjects, insertProject, updateProject, type Project } from "@/services/projectService";
 
 // Normalize key — lowercase, trim spaces, replace spaces with hyphens
 // "Notify App" → "notify-app"
@@ -25,6 +25,16 @@ export async function getProject(rawKey: string): Promise<Project | null> {
 // Get all projects — used on the home page
 export async function getProjects(): Promise<Project[]> {
   return findAllProjects();
+}
+
+// Get project by Firestore document ID — used on edit page
+export async function getProjectById(projectId: string): Promise<Project | null> {
+  return findProjectById(projectId);
+}
+
+// Update existing project — used on edit page
+export async function editProject(projectId: string, payload: { name: string; key: string; description: string; type: "public" | "private" }): Promise<void> {
+  return updateProject(projectId, payload);
 }
 
 // Get project or auto-create if it doesn't exist

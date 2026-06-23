@@ -1,19 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProjects } from "@/models/projectModel";
+import { getProjects, removeProject } from "@/models/projectModel";
 import type { Project } from "@/services/projectService";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import ConfirmModal from "@/app/components/ConfirmModal/ConfirmModal";
+import FeedbackListModal from "@/app/components/FeedbackListModal/FeedbackListModal";
+import toast from "react-hot-toast";
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading,  setLoading]  = useState(true);
+  const [projects,       setProjects]       = useState<Project[]>([]);
+  const [loading,        setLoading]        = useState(true);
+  const [deleteTarget,    setDeleteTarget]    = useState<Project | null>(null);
+  const [deleteLoading,   setDeleteLoading]   = useState(false);
+  const [feedbackTarget,  setFeedbackTarget]  = useState<Project | null>(null);
 
   useEffect(() => {
     getProjects()
       .then(setProjects)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
+    try {
+      await removeProject(deleteTarget.projectId);
+      setProjects((prev) => prev.filter((p) => p.projectId !== deleteTarget.projectId));
+      toast.success(`"${deleteTarget.name}" deleted.`, { id: "project-toast" });
+      setDeleteTarget(null);
+    } catch {
+      toast.error("Failed to delete project.", { id: "project-toast" });
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
     <>
@@ -83,7 +104,11 @@ export default function ProjectsPage() {
                         <a href={`/edit-project?id=${project.projectId}`} className="fb-icon-btn" title="Edit project">
                           <FiEdit2 size={15} />
                         </a>
-                        <button className="fb-icon-btn fb-icon-btn-danger" title="Delete project">
+                        <button
+                          className="fb-icon-btn fb-icon-btn-danger"
+                          title="Delete project"
+                          onClick={() => setDeleteTarget(project)}
+                        >
                           <FiTrash2 size={15} />
                         </button>
                       </div>
@@ -101,12 +126,12 @@ export default function ProjectsPage() {
                       >
                         Share Feedback
                       </a>
-                      <a
-                        href={`/dashboard?key=${project.key}`}
+                      <button
                         className="fb-btn fb-btn-ghost fb-btn-sm"
+                        onClick={() => setFeedbackTarget(project)}
                       >
                         View Responses
-                      </a>
+                      </button>
                     </div>
 
                   </div>
@@ -117,6 +142,22 @@ export default function ProjectsPage() {
 
         </div>
       </section>
+
+      {/* ── Feedback List Modal ── */}
+      <FeedbackListModal
+        project={feedbackTarget}
+        onClose={() => setFeedbackTarget(null)}
+      />
+
+      {/* ── Delete Confirm Modal ── */}
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Delete Project"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        loading={deleteLoading}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </>
   );
 }

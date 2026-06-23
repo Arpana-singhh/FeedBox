@@ -10,44 +10,14 @@ import { getProject }   from "@/models/projectModel";
 import { submitFeedback, getProjectFeedbacks } from "@/models/feedbackModel";
 import type { Project }  from "@/services/projectService";
 import type { Feedback } from "@/services/feedbackService";
+import { getInitials } from "@/utils/helper";
+import { StarDisplay, StarPicker } from "@/utils/feedbackUtils";
 
 // ── Validation schema ─────────────────────────────────────────────────────────
 const feedbackSchema = Yup.object({
   userName: Yup.string().min(2, "Name must be at least 2 characters").required("Name is required"),
   message : Yup.string().min(10, "Feedback must be at least 10 characters").required("Feedback is required"),
 });
-
-// ── Star components ───────────────────────────────────────────────────────────
-function StarPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
-  const [hovered, setHovered] = useState(0);
-  return (
-    <span className="fb-stars">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <span
-          key={s}
-          className={`fb-star ${s <= (hovered || value) ? "filled" : ""}`}
-          onClick={() => onChange(s)}
-          onMouseEnter={() => setHovered(s)}
-          onMouseLeave={() => setHovered(0)}
-        >★</span>
-      ))}
-    </span>
-  );
-}
-
-function StarDisplay({ rating }: { rating: number }) {
-  return (
-    <span className="fb-stars" style={{ cursor: "default" }}>
-      {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={`fb-star ${s <= rating ? "filled" : ""}`} style={{ cursor: "default" }}>★</span>
-      ))}
-    </span>
-  );
-}
-
-function getInitials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
-}
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function FeedbackPage() {

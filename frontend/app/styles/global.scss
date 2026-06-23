@@ -214,7 +214,7 @@ a { text-decoration: none; }
   background   : $surface;
   border       : 1px solid $border-color;
   border-radius: 12px;
-  padding      : 1.25rem;
+  padding: 0.5rem 0.7rem;
 
   .fb-feedback-header {
     display        : flex;
@@ -261,6 +261,7 @@ a { text-decoration: none; }
     color      : #374151;
     line-height: 1.6;
     margin-top : 0.5rem;
+    margin-bottom:0;
   }
 }
 

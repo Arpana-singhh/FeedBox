@@ -1,4 +1,6 @@
 // Static dashboard – will be wired to Firestore later
+import { getInitials } from "@/utils/helper";
+import { StarDisplay } from "@/utils/feedbackUtils";
 
 const STATS = [
   { icon: "📁", label: "Total Projects",  value: "6",   iconClass: "icon-primary" },
@@ -19,19 +21,6 @@ const FEEDBACKS = [
   { id: "fb-010", project: "TaskFlow App",        user: "Simran Kaur",   rating: 5, message: "Switched our whole team from Trello. The UX is so much cleaner and faster.",      date: "11 Jun 2026" },
 ];
 
-function StarDisplay({ rating }: { rating: number }) {
-  return (
-    <span className="fb-stars" style={{ cursor: "default" }}>
-      {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={`fb-star ${s <= rating ? "filled" : ""}`} style={{ cursor: "default", fontSize: "0.9rem" }}>★</span>
-      ))}
-    </span>
-  );
-}
-
-function getInitials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
-}
 
 function ratingBadgeClass(rating: number) {
   if (rating >= 5) return "fb-badge-success";

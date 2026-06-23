@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
@@ -58,6 +59,11 @@ export async function findProjectById(projectId: string): Promise<Project | null
 // Update an existing project document
 export async function updateProject(projectId: string, payload: CreateProjectPayload): Promise<void> {
   await updateDoc(doc(db, "projects", projectId), { ...payload });
+}
+
+// Delete a project document by ID
+export async function deleteProject(projectId: string): Promise<void> {
+  await deleteDoc(doc(db, "projects", projectId));
 }
 
 // Insert a new project document into Firestore

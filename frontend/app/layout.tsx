@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { Toaster } from "react-hot-toast";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+import theme from "@/config/theme";
 
 export const metadata: Metadata = {
   title: "FeedBox – Multi-Project Feedback",
@@ -21,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── Page Content ── */}
         {/* AntdRegistry injects antd styles server-side — fixes the CSS flash on first load */}
         <AntdRegistry>
-          <main className="flex-grow-1">
-            {children}
-          </main>
+          <ConfigProvider theme={theme}>
+            <main className="flex-grow-1">
+              {children}
+            </main>
+          </ConfigProvider>
         </AntdRegistry>
 
         <Footer />

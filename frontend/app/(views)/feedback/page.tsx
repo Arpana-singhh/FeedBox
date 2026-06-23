@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Input, Button } from "antd";
 import toast from "react-hot-toast";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { getOrCreateProject }   from "@/controllers/projectController";
-import { submitFeedback, getProjectFeedbacks } from "@/controllers/feedbackController";
+import { getProject }   from "@/models/projectModel";
+import { submitFeedback, getProjectFeedbacks } from "@/models/feedbackModel";
 import type { Project }  from "@/services/projectService";
 import type { Feedback } from "@/services/feedbackService";
 
@@ -54,21 +52,17 @@ function getInitials(name: string) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function FeedbackPage() {
   const searchParams = useSearchParams();
+  const router       = useRouter();
   const key          = searchParams.get("key") || "";  // /feedback?key=notifyapp
 
+  const [keyInput,    setKeyInput]    = useState("");
   const [project,     setProject]     = useState<Project | null>(null);
   const [feedbacks,   setFeedbacks]   = useState<Feedback[]>([]);
   const [loading,     setLoading]     = useState(true);
   const [rating,      setRating]      = useState(0);
   const [ratingError, setRatingError] = useState(false);
+  const [notFound,    setNotFound]    = useState(false);
   const [submitted,   setSubmitted]   = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined); // undefined = still checking
-
-  // Track Firebase auth state
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => setCurrentUser(user));
-    return () => unsub();
-  }, []);
 
   // ── Load project and feedbacks on mount ────────────────────────────────────
   useEffect(() => {
@@ -79,11 +73,16 @@ export default function FeedbackPage() {
 
     const load = async () => {
       try {
-        // Step 1 — get or auto-create project by key
-        const proj = await getOrCreateProject(key);
+        const proj = await getProject(key);
+
+        if (!proj) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+
         setProject(proj);
 
-        // Step 2 — load existing feedbacks for this project
         const list = await getProjectFeedbacks(key);
         setFeedbacks(list);
 
@@ -136,19 +135,39 @@ export default function FeedbackPage() {
     setSubmitting(false);
   };
 
-  // ── No key in URL ──────────────────────────────────────────────────────────
+  // ── No key in URL — show input to enter one ───────────────────────────────
   if (!key) {
+    const handleKeySubmit = () => {
+      const trimmed = keyInput.trim().toLowerCase();
+      if (!trimmed) return;
+      router.push(`/feedback?key=${trimmed}`);
+    };
+
     return (
       <div className="fb-empty" style={{ marginTop: "4rem" }}>
         <div className="fb-empty-icon">🔗</div>
-        <div className="fb-empty-title">No project key provided</div>
-        <div className="fb-empty-desc">Use a link like <code>/feedback?key=yourproject</code></div>
+        <div className="fb-empty-title">Enter a Project Key</div>
+        <div className="fb-empty-desc mb-3">
+          Ask the project owner for the key, then enter it below.
+        </div>
+        <div className="d-flex gap-2" style={{ maxWidth: 360, width: "100%" }}>
+          <Input
+            size="large"
+            placeholder="e.g. notify-app"
+            value={keyInput}
+            onChange={(e) => setKeyInput(e.target.value)}
+            onPressEnter={handleKeySubmit}
+          />
+          <Button type="primary" size="large" onClick={handleKeySubmit}>
+            Go
+          </Button>
+        </div>
       </div>
     );
   }
 
   // ── Loading ────────────────────────────────────────────────────────────────
-  if (loading || currentUser === undefined) {
+  if (loading) {
     return (
       <div className="fb-empty" style={{ marginTop: "4rem" }}>
         <div className="fb-empty-desc">Loading project...</div>
@@ -156,16 +175,16 @@ export default function FeedbackPage() {
     );
   }
 
-  // ── Private project gate ───────────────────────────────────────────────────
-  if (project?.type === "private" && !currentUser) {
+  // ── Project not found ─────────────────────────────────────────────────────
+  if (notFound) {
     return (
       <div className="fb-empty" style={{ marginTop: "4rem" }}>
-        <div className="fb-empty-icon">🔒</div>
-        <div className="fb-empty-title">This is a private project</div>
-        <div className="fb-empty-desc mb-3">You need to be logged in to submit feedback.</div>
-        <a href={`/login?redirect=/feedback?key=${key}`} className="fb-btn fb-btn-primary">
-          Login to Continue
-        </a>
+        <div className="fb-empty-icon">❌</div>
+        <div className="fb-empty-title">Project not found</div>
+        <div className="fb-empty-desc mb-3">
+          No project exists with key <code>{key}</code>. Check the key and try again.
+        </div>
+        <a href="/feedback" className="fb-btn fb-btn-ghost">Try another key</a>
       </div>
     );
   }

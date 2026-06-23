@@ -17,6 +17,8 @@ $border-color   : #E5E7EB;
 * { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; box-sizing: border-box; }
 a { text-decoration: none; }
 
+.fb-brand{ color: $primary;}
+
 // ---- Navbar ----
 .fb-navbar {
   background : $surface;
@@ -467,6 +469,27 @@ a { text-decoration: none; }
   margin     : 1.25rem 0 0;
 
   a { color: $primary; font-weight: 600; &:hover { text-decoration: underline; } }
+}
+
+// ---- Icon Buttons ----
+.fb-icon-btn {
+  display        : inline-flex;
+  align-items    : center;
+  justify-content: center;
+  width          : 28px;
+  height         : 28px;
+  border         : none;
+  border-radius  : 6px;
+  background     : transparent;
+  color          : $text-muted;
+  cursor         : pointer;
+  transition     : background 0.15s, color 0.15s;
+
+  &:hover { background: rgba($primary, 0.08); color: $primary; }
+
+  &.fb-icon-btn-danger {
+    &:hover { background: rgba(#EF4444, 0.08); color: #EF4444; }
+  }
 }
 
 // ---- Footer ----

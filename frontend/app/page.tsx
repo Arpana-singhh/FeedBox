@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProjects } from "@/controllers/projectController";
+import { getProjects } from "@/models/projectModel";
 import type { Project } from "@/services/projectService";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -78,16 +79,24 @@ export default function ProjectsPage() {
                       <span className={`fb-badge ${project.type === "public" ? "fb-badge-success" : "fb-badge-gray"}`}>
                         {project.type}
                       </span>
+                      <div className="action-icons d-flex gap-2">
+                        <button className="fb-icon-btn" title="Edit project">
+                          <FiEdit2 size={15} />
+                        </button>
+                        <button className="fb-icon-btn fb-icon-btn-danger" title="Delete project">
+                          <FiTrash2 size={15} />
+                        </button>
+                      </div>
                     </div>
 
                     <h3 className="fb-card-title">{project.name}</h3>
-                    <p className="fb-card-desc" style={{ fontFamily: "monospace", fontSize: "0.8rem" }}>
-                      /feedback?key={project.key}
+                    <p className="fb-card-desc">
+                      {project.description || "No description provided."}
                     </p>
 
                     <div className="fb-card-footer">
                       <a
-                        href={`/feedback?key=${project.key}`}
+                        href={project.type === "private" ? "/feedback" : `/feedback?key=${project.key}`}
                         className="fb-btn fb-btn-primary fb-btn-sm"
                       >
                         Share Feedback

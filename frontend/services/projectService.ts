@@ -68,8 +68,18 @@ export async function deleteProject(projectId: string): Promise<void> {
   await deleteDoc(doc(db, "projects", projectId));
 }
 
+// Check whether a key is already used by any project
+export async function isKeyTaken(key: string): Promise<boolean> {
+  const existing = await findProjectByKey(key);
+  return existing !== null;
+}
+
 // Insert a new project document into Firestore
 export async function insertProject(payload: CreateProjectPayload): Promise<Project> {
+  if (await isKeyTaken(payload.key)) {
+    throw new Error("A project with this key already exists. Please choose a different key.");
+  }
+
   const docRef = await addDoc(collection(db, "projects"), {
     ...payload,
     createdAt: serverTimestamp(),

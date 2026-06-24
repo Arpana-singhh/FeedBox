@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Input, Select, Button } from "antd";
+import { isKeyTaken } from "@/services/projectService";
 
 export type ProjectFormValues = {
   name       : string;
@@ -19,12 +20,17 @@ type Props = {
   mode          : "add" | "edit";
 };
 
-const projectSchema = Yup.object({
+const makeSchema = (mode: "add" | "edit") => Yup.object({
   name       : Yup.string().min(2, "Name must be at least 2 characters").required("Project name is required"),
   key        : Yup.string()
     .min(2, "Key must be at least 2 characters")
     .matches(/^[a-z0-9-]+$/, "Key can only contain lowercase letters, numbers, and hyphens")
-    .required("Project key is required"),
+    .required("Project key is required")
+    .test("unique-key", "This key is already taken. Please choose a different one.", async (value) => {
+      if (mode === "edit" || !value || value.length < 2 || !/^[a-z0-9-]+$/.test(value)) return true;
+      const taken = await isKeyTaken(value);
+      return !taken;
+    }),
   description: Yup.string().min(10, "Description must be at least 10 characters").required("Description is required"),
   type       : Yup.string().oneOf(["public", "private"]).required("Type is required"),
   projectUrl : Yup.string().url("Enter a valid URL (e.g. https://myapp.vercel.app)").nullable().optional(),
@@ -44,7 +50,7 @@ export default function ProjectForm({ initialValues, onSubmit, mode }: Props) {
 
         <Formik
           initialValues={initialValues}
-          validationSchema={projectSchema}
+          validationSchema={makeSchema(mode)}
           onSubmit={onSubmit}
           enableReinitialize
         >

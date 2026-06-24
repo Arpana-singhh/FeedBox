@@ -78,9 +78,9 @@ a { text-decoration: none; }
 
   &.fb-btn-ghost {
     background  : transparent;
-    color       : $text-muted;
-    border-color: $border-color;
-    &:hover { background: $bg-light; color: $text-main; }
+    color       : $primary;
+    border-color: $primary;
+    &:hover {border-color: $text-main; background: $bg-light; color: $text-main; }
   }
 
   &.fb-btn-sm { padding: 0.35rem 0.875rem; font-size: 0.8rem; }

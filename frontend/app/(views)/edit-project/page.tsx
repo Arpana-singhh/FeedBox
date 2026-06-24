@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getProjectById, editProject } from "@/models/projectModel";
 import ProjectForm, { type ProjectFormValues } from "@/app/components/ProjectForm/ProjectForm";
 
-export default function EditProjectPage() {
+function EditProjectContent() {
   const searchParams = useSearchParams();
   const router       = useRouter();
   const projectId    = searchParams.get("id") || "";
@@ -68,4 +68,12 @@ export default function EditProjectPage() {
   }
 
   return <ProjectForm initialValues={initialValues} onSubmit={handleSubmit} mode="edit" />;
+}
+
+export default function EditProjectPage() {
+  return (
+    <Suspense fallback={<div className="fb-empty" style={{ marginTop: "4rem" }}><div className="fb-empty-desc">Loading...</div></div>}>
+      <EditProjectContent />
+    </Suspense>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -20,7 +20,7 @@ const feedbackSchema = Yup.object({
 });
 
 // ── Page ─────────────────────────────────────────────────────────────────────
-export default function FeedbackPage() {
+function FeedbackContent() {
   const searchParams = useSearchParams();
   const router       = useRouter();
   const key          = searchParams.get("key") || "";  // /feedback?key=notifyapp
@@ -312,5 +312,13 @@ export default function FeedbackPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function FeedbackPage() {
+  return (
+    <Suspense fallback={<div className="fb-empty" style={{ marginTop: "4rem" }}><div className="fb-empty-desc">Loading...</div></div>}>
+      <FeedbackContent />
+    </Suspense>
   );
 }

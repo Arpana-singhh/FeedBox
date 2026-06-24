@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { getProjects, removeProject } from "@/models/projectModel";
 import type { Project } from "@/services/projectService";
 import { FiEdit2, FiTrash2, FiCopy, FiCheck, FiExternalLink } from "react-icons/fi";
@@ -10,12 +13,21 @@ import FeedbackListModal from "@/app/components/FeedbackListModal/FeedbackListMo
 import toast from "react-hot-toast";
 
 export default function ProjectsPage() {
+  const router = useRouter();
+  const [user,           setUser]           = useState<User | null>(null);
   const [projects,       setProjects]       = useState<Project[]>([]);
   const [loading,        setLoading]        = useState(true);
   const [deleteTarget,    setDeleteTarget]    = useState<Project | null>(null);
   const [deleteLoading,   setDeleteLoading]   = useState(false);
   const [feedbackTarget,  setFeedbackTarget]  = useState<Project | null>(null);
   const [copiedKey,       setCopiedKey]       = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     getProjects()
@@ -120,7 +132,7 @@ export default function ProjectsPage() {
                         <button
                           className="fb-icon-btn fb-icon-btn-danger"
                           title="Delete project"
-                          onClick={() => setDeleteTarget(project)}
+                          onClick={() => user ? setDeleteTarget(project) : router.push("/login")}
                         >
                           <FiTrash2 size={15} />
                         </button>

@@ -1,7 +1,5 @@
-// ==========================================
-// FeedBox – Common Reusable Styles
-// ==========================================
 @use "sass:color";
+@use "./mixin" as *;
 
 // ---- Variables ----
 $primary        : #C3110C;
@@ -46,6 +44,10 @@ a { text-decoration: none; }
       background : rgba($primary, 0.07);
     }
   }
+
+  @include tab{
+    position:relative;
+  }
 }
 
 // ---- Buttons ----
@@ -84,8 +86,8 @@ a { text-decoration: none; }
     &:hover {border-color: $text-main; background: $bg-light; color: $text-main; }
   }
 
-  &.fb-btn-sm { padding: 0.35rem 0.875rem; font-size: 0.8rem; }
-  &.fb-btn-lg { padding: 0.75rem 1.75rem;  font-size: 1rem;   }
+  &.fb-btn-sm { padding: 0.35rem 0.875rem; font-size: 0.8rem; @include phone-5s{padding: .35rem 0.3rem;}}
+  &.fb-btn-lg { padding: .55rem 1rem;  font-size: 1rem; @include phone-xr{padding: 0.35rem 0.5rem; font-size: 0.9rem;}  }
 }
 
 // ---- Card ----
@@ -176,7 +178,7 @@ a { text-decoration: none; }
 // ---- Hero ----
 .fb-hero {
   background   : linear-gradient(135deg, #FEF2F2 0%, #FFF7ED 100%);
-  padding      : 4rem 0 3.5rem;
+  padding      : 3rem 0 3.5rem;
   border-bottom: 1px solid $border-color;
 
   .fb-hero-title {
@@ -187,6 +189,10 @@ a { text-decoration: none; }
     line-height: 1.2;
     margin-bottom: 0.875rem;
     span { color: $primary; }
+
+    @include phone-xr{
+      font-size: 1.5rem;
+    }
   }
 
   .fb-hero-subtitle {
@@ -195,6 +201,11 @@ a { text-decoration: none; }
     max-width  : 500px;
     line-height: 1.65;
     margin-bottom: 1.75rem;
+
+    @include phone-xr{
+      font-size: 1rem;
+      line-height: 1.6;
+    }
   }
 }
 
@@ -446,6 +457,9 @@ a { text-decoration: none; }
   width        : 100%;
   max-width    : 420px;
   box-shadow   : 0 4px 32px rgba(0, 0, 0, 0.07);
+  @include phone-xr{
+    padding: 1.8rem 1rem;
+  }
 }
 
 .fb-auth-brand {
@@ -537,6 +551,91 @@ a { text-decoration: none; }
   padding      : 1.125rem 0;
   font-size    : 0.8rem;
   color        : $text-muted;
+}
+
+.fb-footer-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  @include phone-xr{
+    align-items:center;
+    flex-direction:column;
+  }
+}
+
+// ---- Navbar responsive ----
+.fb-navbar-inner {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+}
+
+.fb-nav-links {
+  display    : flex;
+  align-items: center;
+  gap        : 0.75rem;
+}
+
+.fb-hamburger {
+  display       : none;
+  flex-direction: column;
+  justify-content: center;
+  gap           : 5px;
+  background    : none;
+  border        : none;
+  cursor        : pointer;
+  padding       : 4px;
+
+  span {
+    display         : block;
+    width           : 22px;
+    height          : 2px;
+    background      : $text-main;
+    border-radius   : 2px;
+    transition      : all 0.25s ease;
+  }
+
+  &.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  &.open span:nth-child(2) { opacity: 0; }
+  &.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+.fb-mobile-menu {
+  display       : none;
+  flex-direction: column;
+  border-left    : 1px solid $border-color;
+  padding       : 0.75rem 0;
+  background    : $surface;
+
+  .fb-mobile-link {
+    display    : block;
+    padding    : 0.65rem 1rem;
+    font-size  : 0.9rem;
+    font-weight: 500;
+    color      : $text-main;
+    text-decoration: none;
+    border     : none;
+    background : none;
+    width      : 100%;
+    text-align : left;
+    cursor     : pointer;
+    transition : background 0.15s;
+
+    &:hover { background: $bg-light; color: $primary; }
+  }
+
+  .fb-mobile-logout { color: $primary; }
+}
+
+// @include tab = max-width: 991px
+@include tab {
+  .fb-nav-links  { display: none; }
+  .fb-hamburger  { display: flex; }
+  .fb-mobile-menu { display: flex; position:absolute; top:62px; right:0; height:calc(100vh - 62px); width:250px;}
+}
+
+@include phone-xr{
+  .fb-mobile-menu {width:100%;} 
 }
 
 .key-input-field{

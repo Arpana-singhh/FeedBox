@@ -165,7 +165,7 @@ function FeedbackContent() {
       <div className="fb-page-header">
         <div className="container">
           <div className="d-flex align-items-center gap-3">
-            <a href="/" className="fb-btn fb-btn-ghost fb-btn-sm">← Back</a>
+            <a href="/" className="fb-btn fb-btn-ghost fb-btn-sm">Back</a>
             <div>
               <h1 className="fb-page-title">{project?.name}</h1>
               <p  className="fb-page-subtitle">Share your experience with this project</p>

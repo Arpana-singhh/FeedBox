@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Routes that require login
-const protectedRoutes = ["/dashboard", "/profile", "/settings"];
+const protectedRoutes = ["/dashboard", "/profile", "/settings", "/edit-project"];
 
 // Routes that logged-in users should not see (redirect to dashboard)
 const authRoutes = ["/login", "/register", "/forgot-password"];

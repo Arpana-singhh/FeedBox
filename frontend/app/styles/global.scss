@@ -1,6 +1,7 @@
 // ==========================================
 // FeedBox – Common Reusable Styles
 // ==========================================
+@use "sass:color";
 
 // ---- Variables ----
 $primary        : #C3110C;
@@ -226,8 +227,8 @@ a { text-decoration: none; }
   border-radius: 999px;
 
   &.fb-badge-primary { background: rgba($primary, 0.1); color: $primary; }
-  &.fb-badge-success { background: rgba($accent,  0.1); color: darken($accent,  12%); }
-  &.fb-badge-warning { background: rgba($warning, 0.12); color: darken($warning, 20%); }
+  &.fb-badge-success { background: rgba($accent,  0.1); color: color.adjust($accent,  $lightness: -12%); }
+  &.fb-badge-warning { background: rgba($warning, 0.12); color: color.adjust($warning, $lightness: -20%); }
   &.fb-badge-gray    { background: #F3F4F6; color: $text-muted; }
 }
 
